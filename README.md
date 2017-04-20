@@ -2,14 +2,19 @@
 
 ##To start graphql server
 ```
-cd graphql-server
-yarn install
+cd graphql-sequelize-server
+yarn
 docker-compose up
 ```
 
 ##To start GraphiQL
 ```
 cd graphiql-ui
-yarn install
+yarn
 yarn start
 ```
+
+docker stop $(docker ps -a -q) 
+docker rm $(docker ps -a -q)
+
+docker-compose run benchmark_server
