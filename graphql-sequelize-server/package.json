@@ -41,6 +41,7 @@
   },
   "homepage": "https://github.com/mickhansen/graphql-sequelize",
   "dependencies": {
+    "cors": "^2.8.3",
     "dataloader-sequelize": "^1.4.5",
     "http-proxy": "^1.16.2",
     "lodash": "^4.0.0"
