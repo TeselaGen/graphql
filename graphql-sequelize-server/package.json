@@ -43,12 +43,14 @@
   "dependencies": {
     "cors": "^2.8.3",
     "dataloader-sequelize": "^1.4.5",
+    "graphql-sequelize": "^5.3.1",
+    "graphql-sequelize-crud": "^0.3.0",
     "http-proxy": "^1.16.2",
     "lodash": "^4.0.0"
   },
   "peerDependencies": {
-    "graphql-relay": "^0.4.2",
-    "graphql": "^0.5.0 || ^0.6.0 || ^0.7.0 || ^0.8.0"
+    "graphql": "^0.5.0 || ^0.6.0 || ^0.7.0 || ^0.8.0",
+    "graphql-relay": "^0.4.2"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",
