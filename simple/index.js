@@ -6,8 +6,10 @@ const {
 const Sequelize = require("sequelize");
 const express = require("express");
 const graphqlHTTP = require("express-graphql");
+const cors = require("cors");
 
 const app = express();
+// app.use(cors)
 const sequelize = new Sequelize(
   "postgres://graphql_sequelize_test:graphql_sequelize_test@localhost:5432/graphql_sequelize_test"
 );
@@ -93,6 +95,41 @@ const Material = sequelize.define(
   }
 );
 
+const Sequence = sequelize.define(
+  "Sequence", {
+    id: {
+      type: Sequelize.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: true
+    },
+    type: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        isIn: [
+          ["DNA", "RNA"]
+        ]
+      }
+    },
+    status: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        isIn: [
+          ["registered", "target"]
+        ]
+      }
+    },
+    bps: {
+      type: Sequelize.TEXT,
+      allowNull: false
+    },
+  }, {
+    timestamps: true
+  }
+);
+
 const Todo = sequelize.define(
   "Todo", {
     id: {
@@ -123,6 +160,33 @@ const TodoAssignee = sequelize.define(
     timestamps: true
   }
 );
+
+
+
+Material.hasMany(Sequence, {
+  as: "sequence_material",
+  foreignKey: "sequence_material"
+});
+
+Sequence.belongsTo(Material, {
+  as: "material",
+  foreignKey: "materialId"
+});
+
+
+
+
+User.hasMany(Sequence, {
+  as: "sequences",
+  foreignKey: "ownerId"
+});
+
+Sequence.belongsTo(User, {
+  as: "user",
+  foreignKey: "ownerId"
+});
+
+
 
 User.hasMany(Material, {
   as: "materials",
@@ -165,6 +229,7 @@ sequelize
         var models = {
           User: User,
           Material: Material,
+          Sequence: Sequence,
         };
 
         var fixtures = [{
@@ -180,7 +245,7 @@ sequelize
 
         ];
 
-        for (var i = 0; i < 100; i++) {
+        for (var i = 1; i < 100; i++) {
           fixtures.push({
             model: "Material",
             data: {
@@ -193,11 +258,35 @@ sequelize
           })
         }
 
+        var bps = ''
+
+        for (var i = 0; i < 100; i++) {
+          bps += 'acagagat'
+        }
+
+
+        for (var i = 1; i < 500; i++) {
+          fixtures.push({
+            model: "Sequence",
+            data: {
+              type: 'DNA',
+              status: 'registered',
+              sourceSystem: 'agahaha' + i,
+              sourceSystemId: 'agahaha',
+              ownerId: 12,
+              bps: bps,
+              materialId: i%5 + 1,
+            }
+          })
+        }
+
+        
+
         sequelize_fixtures.loadFixtures(fixtures, models).then(function() {
           console.log('fixtures loaded')
             // doStuffAfterLoad();
         });
-
+        app.use(cors())
         app.use(
           "/graphql",
           graphqlHTTP({
