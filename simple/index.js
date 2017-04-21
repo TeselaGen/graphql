@@ -1,10 +1,16 @@
-const { getSchema } = require('graphql-sequelize-crud');
-const Sequelize = require('sequelize');
-const express = require('express');
-const graphqlHTTP = require('express-graphql');
+
+const sequelize_fixtures = require("sequelize-fixtures");
+const {
+  getSchema
+} = require("graphql-sequelize-crud");
+const Sequelize = require("sequelize");
+const express = require("express");
+const graphqlHTTP = require("express-graphql");
 
 const app = express();
-const sequelize = new Sequelize('postgres://graphql_sequelize_test:graphql_sequelize_test@localhost:5432/graphql_sequelize_test');
+const sequelize = new Sequelize(
+  "postgres://graphql_sequelize_test:graphql_sequelize_test@localhost:5432/graphql_sequelize_test"
+);
 // const sequelize = new Sequelize('database', 'username', 'password', {
 //   // sqlite! now!
 //   dialect: 'sqlite',
@@ -18,84 +24,192 @@ const sequelize = new Sequelize('postgres://graphql_sequelize_test:graphql_seque
 
 // });
 
-const User = sequelize.define('User', {
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false
+const User = sequelize.define(
+  "User", {
+    id: {
+      type: Sequelize.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: true
+    },
+    email: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      unique: true
+    },
+    password: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    firstName: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    lastName: {
+      type: Sequelize.STRING,
+      allowNull: false
+    }
+  }, {
+    timestamps: true
   }
-}, {
-  timestamps: true
+);
+
+const Material = sequelize.define(
+  "Material", {
+    id: {
+      type: Sequelize.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: true
+    },
+    type: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        isIn: [
+          ["DNA", "microbialStrain"]
+        ]
+      }
+    },
+    status: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        isIn: [
+          ["registered", "target"]
+        ]
+      }
+    },
+    sourceSystem: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    sourceSystemId: {
+      type: Sequelize.STRING,
+      allowNull: false
+    }
+  }, {
+    timestamps: true
+  }
+);
+
+const Todo = sequelize.define(
+  "Todo", {
+    id: {
+      type: Sequelize.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: true
+    },
+    text: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    completed: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false
+    }
+  }, {
+    timestamps: true
+  }
+);
+
+const TodoAssignee = sequelize.define(
+  "TodoAssignee", {
+    primary: {
+      type: Sequelize.BOOLEAN
+    }
+  }, {
+    timestamps: true
+  }
+);
+
+User.hasMany(Material, {
+  as: "materials",
+  foreignKey: "ownerId"
 });
 
-const Todo = sequelize.define('Todo', {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-    allowNull: true
-  },
-  text: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  completed: {
-    type: Sequelize.BOOLEAN,
-    allowNull: false
-  }
-}, {
-  timestamps: true
+Material.belongsTo(User, {
+  as: "user",
+  foreignKey: "ownerId"
 });
-
-const TodoAssignee = sequelize.define('TodoAssignee', {
-  primary: {
-    type: Sequelize.BOOLEAN
-  }
-}, {
-  timestamps: true
-});
-
 
 User.hasMany(Todo, {
-  as: 'todos',
-  foreignKey: 'userId'
+  as: "todos",
+  foreignKey: "userId"
 });
 Todo.belongsTo(User, {
-  as: 'user',
-  foreignKey: 'userId'
+  as: "user",
+  foreignKey: "userId"
 });
 
 // belongsToMany
 User.belongsToMany(Todo, {
-  as: 'assignedTodos',
+  as: "assignedTodos",
   through: TodoAssignee
 });
 Todo.belongsToMany(User, {
-  as: 'assignees',
+  as: "assignees",
   through: TodoAssignee
 });
 
-sequelize.sync({
-  force: true
-})
-.then(() => {
+sequelize
+  .drop()
+  .then(function() {
+    return sequelize.sync({
+        force: true
+      })
+      .then(() => {
+        const schema = getSchema(sequelize);
 
-  const schema = getSchema(sequelize);
-  console.log('schema:', schema)
-  app.use('/graphql', graphqlHTTP({
-    schema: schema,
-    graphiql: true
-  }));
+        var models = {
+          User: User,
+          Material: Material,
+        };
 
-  const port = 3001;
-  app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
-  });
+        var fixtures = [{
+            model: "User",
+            data: {
+              id: 12,
+              email: 'asagag',
+              password: 'asagag',
+              firstName: 'tom',
+              lastName: 'rich'
+            }
+          }
 
-});
+        ];
 
+        for (var i = 0; i < 100; i++) {
+          fixtures.push({
+            model: "Material",
+            data: {
+              type: 'DNA',
+              status: 'registered',
+              sourceSystem: 'agahaha' + i,
+              sourceSystemId: 'agahaha',
+              ownerId: 12,
+            }
+          })
+        }
 
+        sequelize_fixtures.loadFixtures(fixtures, models).then(function() {
+          console.log('fixtures loaded')
+            // doStuffAfterLoad();
+        });
+
+        app.use(
+          "/graphql",
+          graphqlHTTP({
+            schema: schema,
+            graphiql: true
+          })
+        );
+
+        const port = 3001;
+        app.listen(port, () => {
+          console.log(`Listening on port ${port}`);
+        });
+      });
+
+  })

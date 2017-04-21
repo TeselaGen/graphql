@@ -12,12 +12,13 @@
   "dependencies": {
     "express": "^4.15.2",
     "express-graphql": "^0.6.4",
-    "graphql": "^0.7.0",
+    "graphql": "^0.8.0",
     "graphql-relay": "^0.4.3",
     "graphql-sequelize": "^5.3.1",
     "graphql-sequelize-crud": "^0.3.0",
     "nodemon": "^1.11.0",
     "pg": "^6.1.5",
-    "sequelize": "^3.30.4"
+    "sequelize": "^3.30.4",
+    "sequelize-fixtures": "^0.5.6"
   }
 }
