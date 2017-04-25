@@ -82,6 +82,18 @@ const Material = sequelize.define(
         ]
       }
     },
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    dateCreated: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    lastEdited: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
     sourceSystem: {
       type: Sequelize.STRING,
       allowNull: false
@@ -198,6 +210,19 @@ Material.belongsTo(User, {
   foreignKey: "ownerId"
 });
 
+//////vvvvvvvvvv
+User.hasMany(Material, {
+  as: "materialsIMade",
+  foreignKey: "addedBy"
+});
+
+Material.belongsTo(User, {
+  as: "who_added",
+  foreignKey: "addedBy"
+});
+//////^^^^^^^^^^
+
+//////vvvvvvvvvv
 User.hasMany(Todo, {
   as: "todos",
   foreignKey: "userId"
@@ -206,6 +231,7 @@ Todo.belongsTo(User, {
   as: "user",
   foreignKey: "userId"
 });
+//////^^^^^^^^^^
 
 // belongsToMany
 User.belongsToMany(Todo, {
@@ -235,13 +261,23 @@ sequelize
         var fixtures = [{
             model: "User",
             data: {
-              id: 12,
-              email: 'asagag',
+              id: 1,
+              email: 'tom@gmail.com',
               password: 'asagag',
               firstName: 'tom',
               lastName: 'rich'
             }
-          }
+          },
+          {
+            model: "User",
+            data: {
+              id: 2,
+              email: 'sam@gmail.com',
+              password: 'asagag',
+              firstName: 'sam',
+              lastName: 'd'
+            }
+          },
 
         ];
 
@@ -253,7 +289,11 @@ sequelize
               status: 'registered',
               sourceSystem: 'agahaha' + i,
               sourceSystemId: 'agahaha',
-              ownerId: 12,
+              ownerId: 1,
+              addedBy: 2,
+              name: 'material_' + i,
+              dateCreated: 'monday the 4th',
+              lastEdited: 'tuesday the 9th'
             }
           })
         }
@@ -273,7 +313,7 @@ sequelize
               status: 'registered',
               sourceSystem: 'agahaha' + i,
               sourceSystemId: 'agahaha',
-              ownerId: 12,
+              ownerId: 1,
               bps: bps,
               materialId: i%5 + 1,
             }
