@@ -1,19 +1,12 @@
-# graphql
+get postgres
 
-##To start graphql server
 ```
-cd graphql-sequelize-server
-yarn
-docker-compose up
+docker run --name postgres -e POSTGRES_DB=graphql_sequelize_test -e POSTGRES_USER=graphql_sequelize_test -e POSTGRES_PASSWORD=graphql_sequelize_test -p 5432:5432 -d postgres
 ```
 
-##To start GraphiQL
+run the server 
 ```
-cd graphiql-ui
-yarn
+yarn install
+
 yarn start
 ```
-
-docker stop $(docker ps -a -q) 
-docker rm $(docker ps -a -q)
-
