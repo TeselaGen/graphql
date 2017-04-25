@@ -9,4 +9,10 @@ run the server
 yarn install
 
 yarn start
+
+```
+
+you can inspect the server at:
+```
+localhost:3001/graphql
 ```
