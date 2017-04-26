@@ -107,7 +107,7 @@ init()
           sequelize.query("SELECT set_config('tg.lims_user', '" + userIdCounter++ + "',true);", {
             raw: true
           });
-          debugger
+          
           var graphqlFunc = graphqlHTTP({
             schema: schema,
             graphiql: true,

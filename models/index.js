@@ -2,8 +2,8 @@ var Chance = require('chance');
 var chance = new Chance()
 const Sequelize = require("sequelize");
 var faker = require('faker');
-module.exports = function(sequelize) {
 
+module.exports = function(sequelize) {
   const AccessLog = sequelize.define(
     "AccessLog", {
       id: {
