@@ -1,0 +1,58 @@
+mutation myCreateMaterial($input: createMaterialInput!) {
+ createMaterial(input:$input) {
+   clientMutationId
+ }
+}
+
+
+{
+ "input":{
+   "type":"DNA",
+   "status":"registered",
+   "sourceSystem":"SR",
+   "sourceSystemId":"1",
+  "name": "aagag",
+  "lastEdited": "1241512",
+  "ownerId": 1,
+  "addedBy": 1
+  
+ }
+}
+
+
+mutation myCreateMaterial($input: createMaterialInput!) {
+ createMaterial(input:$input) {
+   clientMutationId
+ }
+}
+
+{
+  "input": {
+    "type": "DNA",
+    "status": "registered",
+    "sourceSystem": "SR",
+    "sourceSystemId": "1",
+    "name": "aagag",
+    "lastEdited": "1241512",
+    "ownerId": "1"
+  }
+}
+
+
+
+
+mutation myCreateUser($input: createUserInput!) {
+ createUser(input:$input) {
+   clientMutationId
+ }
+}
+
+
+{
+ "input":{
+   "email": "tom2@gmail.com",
+   "password": "asagag",
+   "firstName": "tomas",
+   "lastName": "rico"
+ }
+}

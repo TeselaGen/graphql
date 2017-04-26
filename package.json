@@ -5,18 +5,23 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
+    "debug": "node --inspect --debug-brk index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chance": "^1.0.6",
+    "continuation-local-storage": "^3.2.0",
     "cors": "^2.8.3",
     "express": "^4.15.2",
     "express-graphql": "^0.6.4",
+    "faker": "^4.1.0",
     "graphql": "^0.8.0",
     "graphql-relay": "^0.4.3",
     "graphql-sequelize": "^5.3.1",
     "graphql-sequelize-crud": "^0.3.0",
+    "lodash": "^4.17.4",
     "nodemon": "^1.11.0",
     "pg": "^6.1.5",
     "sequelize": "^3.30.4",

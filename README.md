@@ -1,8 +1,10 @@
 get postgres
 
 ```
-docker run --name postgres -e POSTGRES_DB=graphql_sequelize_test -e POSTGRES_USER=graphql_sequelize_test -e POSTGRES_PASSWORD=graphql_sequelize_test -p 5432:5432 -d postgres
+docker run  -it --name postgres -e POSTGRES_DB=graphql_sequelize_test -e POSTGRES_USER=graphql_sequelize_test -e POSTGRES_PASSWORD=graphql_sequelize_test -p 5432:5432 postgres /bin/bash
 ```
+
+/usr/lib/postgresql/9.6/bin/pg_ctl stop
 
 run the server 
 ```
