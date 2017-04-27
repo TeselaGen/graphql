@@ -1,4 +1,56 @@
 {
-	"extends": "eslint:recommended"
-	
+    "globals": {
+      "Ext": false,
+      "CustomSettings": true,
+      "Teselagen": false,
+      "Vede": false,
+      "toastr": false,
+      "Promise": false,
+      "async": false,
+      "$": true,
+      "veBindToCmdShiftU": true,
+      "d3": true,
+      "io": true,
+      "axios": true,
+      "bluebird": true,
+      "browserifyModules": true,
+      "_": true,
+      "Shepherd": true,
+      "JSZip": true,
+      "saveAs": true,
+    },
+    "rules": {
+        "no-unused-vars": [1, {"vars": "all", "args": "none"}],
+        "no-semi": 0,
+        "no-irregular-whitespace":0,
+        "no-undef":2,
+        "no-console":0,
+        "no-redeclare":2,
+        "comma-dangle":0,
+        "no-mixed-spaces-and-tabs": 0,
+        "no-unexpected-multiline": 0,
+        "indent": [
+            0,
+            "tab"
+        ],
+        "quotes": [
+            0,
+            "double"
+        ],
+        "linebreak-style": [
+            0,
+            "unix"
+        ],
+        "semi": [
+            0,
+            "always"
+        ]
+    },
+    "env": {
+        "node": true,
+        "browser": true,
+        "mocha": true,
+        "es6": true
+    },
+    "extends": "eslint:recommended"
 }

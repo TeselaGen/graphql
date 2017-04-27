@@ -1,0 +1,13 @@
+{
+	"dialect": "postgres",
+	"username": "graphql_sequelize_test",
+	"password": "graphql_sequelize_test",
+	"database": "graphql_sequelize_test",
+	"host": "127.0.0.1",
+	"port": 3001,
+	"pool": {
+		"max": 5,
+		"min": 0,
+		"idle": 10000
+	}
+}
