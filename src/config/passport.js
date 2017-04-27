@@ -63,7 +63,7 @@ export default (app,express) => {
 		});
 
 		app.passport.deserializeUser(function(id, done) {
-		  app.models.User.findOne(id).success(function(user) { done(null, user); });
+		  app.models.User.find({id:id}).then(function(user) { done(null, user); });
 		});
 
 
