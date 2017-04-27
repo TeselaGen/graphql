@@ -11,25 +11,31 @@ function generateFakeRecord(model) {
 }
 
 module.exports = function(sequelize, models) {
-  return Promise.resolve().then(function () {
-    each(models, function(model) {
-      each(model.associations, function(association) {
-        // if (association.associationType === "HasMany") {
+
+  models.User.create({
+    email: "a@a.com",
+    password: "123"
+  }).then(function() {
+    return Promise.resolve().then(function() {
+      each(models, function(model) {
+        each(model.associations, function(association) {
+          // if (association.associationType === "HasMany") {
           var fakeRecord = generateFakeRecord(model);
           fakeRecord[association.as] = [generateFakeRecord(association.target)];
           model.create(fakeRecord, {
-            include: [
-              {
-                model: association.target,
-                as: association.as
-              }
-            ]
+            include: [{
+              model: association.target,
+              as: association.as
+            }]
           });
-        // }
-      });
-      
+          // }
+        });
 
-      model.create(generateFakeRecord(model));
-    });
-  })
+
+        model.create(generateFakeRecord(model));
+      });
+    })
+
+  });
+
 };

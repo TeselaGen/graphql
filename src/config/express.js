@@ -2,6 +2,7 @@ import express from 'express';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import cookieSession from 'cookie-session';
 import compress from 'compression';
 import methodOverride from 'method-override';
 import cors from 'cors';
@@ -10,6 +11,8 @@ import expressWinston from 'express-winston';
 import expressValidation from 'express-validation';
 import helmet from 'helmet';
 import winstonInstance from './winston';
+import passportInit from './passport'
+
 //import routes from '../server/routes/index.route';
 import config from './config';
 import APIError from './APIError';
@@ -21,7 +24,7 @@ import graphql from '../graphql';
 //import devConfig from './webpack.config.dev';
 
 export default app => {
-
+    app.passport = require('passport');
     if (config.env === 'development') {
       app.use(logger('dev'));
     }
@@ -36,6 +39,18 @@ export default app => {
     }));
 
     app.use(cookieParser());
+    app.use(cookieSession({
+        key: 'telims',
+        secret: 'random',
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24 // Sessions expire after 24 hours.
+        }
+    }));
+
+    app.use(app.passport.initialize());
+    app.use(app.passport.session());
+
+   
     app.use(compress());
     app.use(methodOverride());
 
@@ -44,6 +59,7 @@ export default app => {
 
     // enable CORS - Cross Origin Resource Sharing
     app.use(cors());
+    passportInit(app,express);
 
     // enable detailed API logging in dev env
     if (config.env === 'development') {
@@ -59,6 +75,13 @@ export default app => {
 
     // mount all routes on /api path
     //app.use('/api', routes);
+    //
+    //
+    //
+    //require('./passport.js')(app,express);
+    app.get('/logic', function (req,res) {
+        return res.json(200,{success:true})
+    });
     app.use('/graphql', graphql(
       jsonConfig,
       app.sequelize
