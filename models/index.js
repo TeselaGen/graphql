@@ -36,6 +36,13 @@ module.exports = function(sequelize) {
           return this.getDataValue('id') 
         },
       },
+      fullName: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        get: function() {
+          return (this.getDataValue('firstName') + ' ' + this.getDataValue('lastName'))
+        },
+      },
       email: {
         type: Sequelize.STRING,
         faker: faker.internet.email,
@@ -58,7 +65,7 @@ module.exports = function(sequelize) {
         allowNull: true
       }
     }, {
-      timestamps: false
+      timestamps: true
     }
   );
 
@@ -71,16 +78,12 @@ module.exports = function(sequelize) {
         allowNull: true
       },
       type: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM,
+        values: ["DNA", "microbialStrain"],
         allowNull: true,
         faker: function () {
           return chance.pickone(['DNA', 'microbialStrain'])
         },
-        validate: {
-          isIn: [
-            ["DNA", "microbialStrain"]
-          ]
-        }
       },
       status: {
         type: Sequelize.STRING,
@@ -115,7 +118,7 @@ module.exports = function(sequelize) {
         allowNull: true
       }
     }, {
-      timestamps: false
+      timestamps: true
     }
   );
 
@@ -159,7 +162,7 @@ module.exports = function(sequelize) {
         allowNull: true
       },
     }, {
-      timestamps: false
+      timestamps: true
     }
   );
 
@@ -180,7 +183,7 @@ module.exports = function(sequelize) {
   //       allowNull: true
   //     }
   //   }, {
-  //     timestamps: false
+  //     timestamps: true
   //   }
   // );
 
@@ -190,7 +193,7 @@ module.exports = function(sequelize) {
   //       type: Sequelize.BOOLEAN
   //     }
   //   }, {
-  //     timestamps: false
+  //     timestamps: true
   //   }
   // );
 
@@ -222,12 +225,12 @@ module.exports = function(sequelize) {
 
   User.hasMany(Material, {
     as: "materials",
-    foreignKey: "ownerId"
+    foreignKey: "userId"
   });
 
   Material.belongsTo(User, {
     as: "user",
-    foreignKey: "ownerId"
+    foreignKey: "userId"
   });
 
   // //////vvvvvvvvvv

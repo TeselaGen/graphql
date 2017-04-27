@@ -4,6 +4,10 @@ function generateFakeRecord(model) {
     if (attribute.faker) {
       fakeRecord[attribute.fieldName] = attribute.faker();
     }
+    console.log('attribute.fieldName:', attribute.fieldName)
+    if (attribute.fieldName === 'createdAt' || attribute.fieldName === 'updatedAt') {
+      fakeRecord[attribute.fieldName] = new Date(Date.now())
+    }
   });
   return fakeRecord;
 }
@@ -13,23 +17,24 @@ var each = require("lodash/each");
 module.exports = function(sequelize, models) {
   return Promise.resolve().then(function () {
     each(models, function(model) {
+      var includeArray = []
+      var fakeRecord = generateFakeRecord(model);
+
       each(model.associations, function(association) {
         // if (association.associationType === "HasMany") {
-          var fakeRecord = generateFakeRecord(model);
           fakeRecord[association.as] = [generateFakeRecord(association.target)];
-          model.create(fakeRecord, {
-            include: [
-              {
+          includeArray.push({
                 model: association.target,
                 as: association.as
-              }
-            ]
-          });
+              })
         // }
+      });
+      model.create(fakeRecord, {
+        include: includeArray
       });
       
 
-      model.create(generateFakeRecord(model));
+      // model.create(generateFakeRecord(model));
     });
   })
   // Object.keys(models).forEach(function (key) {
