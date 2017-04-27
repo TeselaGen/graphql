@@ -106,25 +106,27 @@ init()
         return sequelize.transaction().then(function(t) {
           sequelize.query("SELECT set_config('tg.lims_user', '" + userIdCounter++ + "',true);", {
             raw: true
-          });
-          debugger
-          var graphqlFunc = graphqlHTTP({
-            schema: schema,
-            graphiql: true,
-            // extensions({ document, variables, operationName, result }) {
-            //   debugger
-            //   return { runTime: Date.now()};
-            // }
+          })
+          .then(function(){
+              var graphqlFunc = graphqlHTTP({
+                schema: schema,
+                graphiql: true,
+                // extensions({ document, variables, operationName, result }) {
+                //   debugger
+                //   return { runTime: Date.now()};
+                // }
+              })
+
+              return graphqlFunc(req, res)
+
+              .then(function() {
+                return t.commit();
+              }).catch(function(e) {
+                console.log('e:', e)
+                return t.rollback();
+              })            
           })
 
-          return graphqlFunc(req, res)
-
-          .then(function() {
-            return t.commit();
-          }).catch(function(e) {
-            console.log('e:', e)
-            return t.rollback();
-          })
         })
 
       }
