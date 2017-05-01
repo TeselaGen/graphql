@@ -4,7 +4,6 @@ function generateFakeRecord(model) {
     if (attribute.faker) {
       fakeRecord[attribute.fieldName] = attribute.faker();
     }
-    console.log('attribute.fieldName:', attribute.fieldName)
     if (attribute.fieldName === 'createdAt' || attribute.fieldName === 'updatedAt') {
       fakeRecord[attribute.fieldName] = new Date(Date.now())
     }

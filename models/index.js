@@ -78,7 +78,7 @@ module.exports = function(sequelize) {
         allowNull: true
       },
       type: {
-        type: Sequelize.ENUM,
+        type: Sequelize.STRING,
         values: ["DNA", "microbialStrain"],
         allowNull: true,
         faker: function () {

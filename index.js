@@ -4,10 +4,8 @@ var namespace = continuationLocalStorage.createNamespace('lims-namespace')
 
 
 var models = require('./models');
-const {
-  getSchema
-} = require("graphql-sequelize-crud");
-
+// const {getSchema } = require("graphql-sequelize-crud"); 
+const {getSchema} = require('./graphql-sequelize-crud');
 const Sequelize = require("sequelize");
 Sequelize.cls = namespace
 
